@@ -7,5 +7,5 @@ Definition of UI polymer componenents that incorporate
 
 Weather app 
 - Weather information model
-- Integration with Google AppEngine Endpoints (http://github.com/nickfloros/testAppV6)
+- Integration with Google AppEngine Endpoints
 
