@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <polymer-element name="nav-bar">
+      <template>
+        <style>
+    
+        </style>
+        <header id="headerDiv" class="navbar navbar-default navbar-fixed-top bs-docs-nav"
+          role="banner">
+          
+          <div class="container">
+           <div class="navbar-header">
+              <button class="navbar-toggle" type="button" on-click="{{showNavBar}}"
+                data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span> <span
+                  class="icon-bar"></span> 
+                  <span class="icon-bar"></span> 
+                  <span class="icon-bar"></span>
+              </button>
+              <!-- <a on-click="{{onMapSelected}}" class="navbar-brand">Map</a>-->
+            </div>
+            <nav id="navContent" class="collapse navbar-collapse bs-navbar-collapse" style=""
+              role="navigation">
+              <ul class="nav navbar-nav">
+                <template if="{{options!=null}}">
+                 <template repeat="{{item in options | enumerate}}">
+                    <li id="li{{item.index}}"><a data-value="{{item.index}}" on-click="{{onSelected}}">{{item.value}}</a></li>
+                </template>        
+                </template>
+                <li id="limap" class="navbar-right"><a on-click="{{onMapSelected}}">Map</a></li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+      </template>
+      <script type="application/dart" src="nav_bar.dart"></script>
+    </polymer-element>
+  </body>
+</html>      

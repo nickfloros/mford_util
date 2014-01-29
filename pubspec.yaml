@@ -1,0 +1,10 @@
+name: mford_util
+version: 0.0.1
+description: A sample Polymer application
+dependencies:
+  google_maps: any
+  intl: any
+  polymer: any
+transformers:
+- polymer:
+    entry_points: web/mford_util.html

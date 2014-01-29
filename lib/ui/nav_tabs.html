@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <polymer-element name="nav-tabs">
+      <template>
+        <div id="navtabs">
+          <ul class="nav nav-tabs">
+            <template repeat="{{item in options | enumerate}}">
+              <li id="li{{item.index}}"><a data-value="{{item.index}}" on-click="{{onSelected}}">{{item.value}}</a></li>
+            </template>
+            <li id="limap" class="navbar-right"><a on-click="{{onMapSelected}}">Map</a></li>
+          </ul>
+        </div>
+      </template>
+      <script type="application/dart" src="nav_tabs.dart"></script>
+    </polymer-element>
+  </body>
+</html>  
