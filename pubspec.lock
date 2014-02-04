@@ -45,6 +45,10 @@ packages:
     description: js_wrapping
     source: hosted
     version: "0.1.0"
+  lawndart:
+    description: lawndart
+    source: hosted
+    version: "0.6.5"
   logging:
     description: logging
     source: hosted

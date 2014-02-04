@@ -2,8 +2,10 @@ name: mford_util
 version: 0.0.1
 description: A sample Polymer application
 dependencies:
+  browser: any
   google_maps: any
   intl: any
+  lawndart: any
   polymer: any
 transformers:
 - polymer:

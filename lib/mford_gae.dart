@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'anemometer_model.dart';
 export 'anemometer_model.dart';
+import 'package:lawndart/lawndart.dart';
 
 /**
  * Google App Engine mobile end points
@@ -13,6 +14,7 @@ class Mford_Gae_Services {
   var _url = 'https://mford-gae.appspot.com/_ah/api/wsep/v1';
   
   List<AnemometerSite> sites = new List<AnemometerSite>();
+  Store _dbStore = new Store('dwStore', 'sitesStore');
   
   Mford_Gae_Services(){
     
@@ -20,13 +22,23 @@ class Mford_Gae_Services {
   
   Future<List<AnemometerSite>> readSites() {
     Completer comp = new Completer<List<AnemometerSite>>();
-    HttpRequest.getString('$_url/sites')
-      .then((result) { 
-        comp.complete(_parseSites(result));
-        })
-      .catchError((onError) {
-        comp.completeError('error');
+    _dbStore.open().then((_) {
+      _dbStore.getByKey('sites').then( (String rawData) {
+          if (rawData!=null) {
+            comp.complete(_parseSites(rawData));
+          }
+          else {
+            HttpRequest.getString('$_url/sites')
+              .then((result) { 
+                _dbStore.save(result,'sites');
+                comp.complete(_parseSites(result));
+              })
+              .catchError((onError) {
+                comp.completeError('error');
+              });
+          }
         });
+    });
 
     return comp.future;
   }
@@ -50,6 +62,7 @@ class Mford_Gae_Services {
     }
     return sites;
   }
+  
   
   /*
    * read site weather info
