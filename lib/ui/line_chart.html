@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 
 <html>
+  <style>
+ /* Portrait */
+@media screen and (orientation:portrait) {
+  #chart {
+    width:320px;
+    height:300px
+  }
+}
+/* Landscape */
+@media screen and (orientation:landscape) {
+  #chart {
+    width:640px;
+    height:300px
+  }
+} 
+  </style>
   <body>
     <polymer-element name="line-chart" attributes="minValue maxValue chartTitle xaxisTitle yaxisTitle">
       <template>
         <style>
         </style>
         <div>
-         <div id="chart" style="width: 600px; height: 300px;"></div>
+         <div id="chart"></div>
         </div>
       </template>
       

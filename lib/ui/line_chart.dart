@@ -62,8 +62,9 @@ class LineChart extends PolymerElement {
   void resize(int width, int height) {
     if (_chartDiv!=null) {
       _chartDiv.style.width='${width}px';
-      _chartDiv.style.height='${height}px';
-      _lineChart.callMethod('draw', [_chartData, _chartOptions]);
+ //     _chartDiv.style.height='${height}px';
+      if (_chartData!=null)
+        _lineChart.callMethod('draw', [_chartData, _chartOptions]);
     }
   }
   
@@ -94,8 +95,10 @@ class LineChart extends PolymerElement {
    * draws a line chart. The data need to be in the following format {[x, y1, y2, y3]}
    */
   void draw(List data){
-    _chartData = _gvis.callMethod('arrayToDataTable', [new JsObject.jsify(data)]);
-    _lineChart.callMethod('draw', [_chartData, _chartOptions]);
+    if (data.isNotEmpty) {
+      _chartData = _gvis.callMethod('arrayToDataTable', [new JsObject.jsify(data)]);
+      _lineChart.callMethod('draw', [_chartData, _chartOptions]);
+    }
   }
   
 }
