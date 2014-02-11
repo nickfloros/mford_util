@@ -79,10 +79,12 @@ class JsMfordGoogleMap extends PolymerElement {
   }
   
   void show(int width,int height) {
-    _resize(width,height);
-    new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
-    if (_markers.length>0)
-      _map.callMethod('fitBounds',[_latLngBound]);    
+    if (_map!=null) {
+      _resize(width,height);
+      new JsObject(_googleMap['event']['trigger'],[_map,'resize']);
+      if (_markers.length>0)
+        _map.callMethod('fitBounds',[_latLngBound]);    
+    }
   }
   
   /**

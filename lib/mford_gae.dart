@@ -17,7 +17,6 @@ class Mford_Gae_Services {
   Store _dbStore = new Store('dwStore', 'sitesStore');
   
   Mford_Gae_Services(){
-    
   }
   
   Future<List<AnemometerSite>> readSites() {
@@ -30,8 +29,9 @@ class Mford_Gae_Services {
           else {
             HttpRequest.getString('$_url/sites')
               .then((result) { 
-                _dbStore.save(result,'sites');
-                comp.complete(_parseSites(result));
+                _dbStore.save(result,'sites').then( (_)  {
+                  comp.complete(_parseSites(result));                  
+                });
               })
               .catchError((onError) {
                 comp.completeError('error');
@@ -70,27 +70,49 @@ class Mford_Gae_Services {
   Future<AnemometerSiteReadings> readSite(int id) {
     
     Completer comp = new Completer<AnemometerSiteReadings>();
-    
-    HttpRequest.getString('$_url/report?site=${sites[id].stationCode}')
-      .then((result) { 
-        AnemometerSiteReadings resp = new AnemometerSiteReadings();
-        resp.lastRead = new DateTime.now();
 
-        var map = JSON.decode(result);
-        resp.readings = new List<AnemometerReading>();
-        if (map['status']['success']) {
-          for (var reading in map['readings']) {
-            resp.readings.add(new AnemometerReading.parse(reading));
+    _dbStore.open().then( (_) {
+      var siteCode = sites[id].stationCode;
+      _dbStore.getByKey(siteCode).then( (String rawData) {
+         ;
+        if (rawData != null) {
+          AnemometerSiteReadings resp = _parseReading(rawData);
+          if (resp.expireTime.isAfter(new DateTime.now())) {
+            return comp.complete(resp);
           }
         }
-        resp.expireTime = resp.readings.last.timeStamp.add(new Duration(minutes: 10));
-        comp.complete(resp);
-        })
-      .catchError((onError) {
-        comp.completeError('error');
-        });
+        HttpRequest.getString('$_url/report?site=$siteCode')
+          .then((result) { 
+            _dbStore.save(result,siteCode ).then((_){
+              AnemometerSiteReadings resp = _parseReading(result);
+              comp.complete(resp);
+            });
+          })
+            .catchError((onError) {
+              comp.completeError('error');
+            });
+        
+      });
+    });
+    
 
     return comp.future;
+  }
+  
+  
+  AnemometerSiteReadings _parseReading(String rawData) {
+    AnemometerSiteReadings resp = new AnemometerSiteReadings();
+    resp.lastRead = new DateTime.now();
+
+    var map = JSON.decode(rawData);
+    resp.readings = new List<AnemometerReading>();
+    if (map['status']['success']) {
+      for (var reading in map['readings']) {
+        resp.readings.add(new AnemometerReading.parse(reading));
+      }
+    }
+    resp.expireTime = resp.readings.last.timeStamp.add(new Duration(minutes: 10));
+    return resp;   
   }
 }
 

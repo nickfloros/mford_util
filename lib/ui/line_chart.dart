@@ -61,7 +61,7 @@ class LineChart extends PolymerElement {
 
   void resize(int width, int height) {
     if (_chartDiv!=null) {
-      _chartDiv.style.width='${width}px';
+      _chartDiv.style.width='${width-15}px';
  //     _chartDiv.style.height='${height}px';
       if (_chartData!=null)
         _lineChart.callMethod('draw', [_chartData, _chartOptions]);
