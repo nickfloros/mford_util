@@ -6,12 +6,15 @@ import 'anemometer_model.dart';
 export 'anemometer_model.dart';
 import 'package:lawndart/lawndart.dart';
 
+import 'package:logging/logging.dart' show Logger, Level, LogRecord;
+
 /**
  * Google App Engine mobile end points
  * They serve weather data 
  */
 class Mford_Gae_Services {
   var _url = 'https://mford-gae.appspot.com/_ah/api/wsep/v1';
+  final Logger _log = new Logger('Mford_Gae_Services');
   
   List<AnemometerSite> sites = new List<AnemometerSite>();
   Store _dbStore = new Store('dwStore', 'sitesStore');
@@ -24,9 +27,11 @@ class Mford_Gae_Services {
     _dbStore.open().then((_) {
       _dbStore.getByKey('sites').then( (String rawData) {
           if (rawData!=null) {
+            _log.info('reading from local store');
             comp.complete(_parseSites(rawData));
           }
           else {
+            _log.info('reading from remote server');
             HttpRequest.getString('$_url/sites')
               .then((result) { 
                 _dbStore.save(result,'sites').then( (_)  {
@@ -73,14 +78,17 @@ class Mford_Gae_Services {
 
     _dbStore.open().then( (_) {
       var siteCode = sites[id].stationCode;
+      _log.info('searching for ${siteCode}');
       _dbStore.getByKey(siteCode).then( (String rawData) {
-         ;
+        
         if (rawData != null) {
+          _log.info('reading from local store');
           AnemometerSiteReadings resp = _parseReading(rawData);
           if (resp.expireTime.isAfter(new DateTime.now())) {
             return comp.complete(resp);
           }
         }
+        _log.info('reading from remote store');
         HttpRequest.getString('$_url/report?site=$siteCode')
           .then((result) { 
             _dbStore.save(result,siteCode ).then((_){

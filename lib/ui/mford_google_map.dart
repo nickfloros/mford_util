@@ -2,12 +2,15 @@ library mford_gmap;
 import 'package:polymer/polymer.dart';
 import 'dart:html';
 import 'package:google_maps/google_maps.dart';
+import 'package:logging/logging.dart' show Logger, Level, LogRecord;
+
 import 'map_marker_callback.dart';
 /**
  * Google map element based on google_maps package
  */
 @CustomTag('mford-map')
 class MfordGoogleMap extends PolymerElement {
+  final Logger _log = new Logger('MfordGoogleMap');
 
   bool get applyAuthorStyles => true;
   /**
@@ -29,7 +32,7 @@ class MfordGoogleMap extends PolymerElement {
   Map _markers = new Map();
 
   MfordGoogleMap.created() : super.created() {
-    print('MfordMap.created : shadowRoot is null ${shadowRoot==null}');
+    _log.fine('MfordMap.created : shadowRoot is null ${shadowRoot==null}');
   }
 
   void enteredView() {
@@ -51,7 +54,7 @@ class MfordGoogleMap extends PolymerElement {
 
       _map = new GMap(_mapCanvas, mapOptions);
 
-      print('GMap.enteredView : shadowRoot is null ${shadowRoot==null}');
+      _log.fine('GMap.enteredView : shadowRoot is null ${shadowRoot==null}');
       _latLngBound = new LatLngBounds();
       
     }
@@ -65,7 +68,7 @@ class MfordGoogleMap extends PolymerElement {
   }
   
   void show(int width,int height) {
-    print('resize : [${width},${height}');
+    _log.fine('resize : [${width},${height}');
     _resize(width,height);
     _map.fitBounds(_latLngBound);
   }
@@ -91,7 +94,7 @@ class MfordGoogleMap extends PolymerElement {
      
     }
     else
-      print('Gmap.addMarker _map is null');
+      _log.fine('Gmap.addMarker _map is null');
   }
 
   /*

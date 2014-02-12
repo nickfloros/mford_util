@@ -1,6 +1,7 @@
 library modal_loading;
 import 'dart:html';
 import 'package:polymer/polymer.dart';
+import 'package:logging/logging.dart' show Logger, Level, LogRecord;
 
 /**
  * Modal loading custom element based on Bootstrap 
@@ -31,7 +32,6 @@ class ModalLoading extends PolymerElement {
 
     if (titleTxt!=null) {
       titleText = titleTxt;
-      print('modal.show : $titleText');
       $['myModalLabel'].text=titleText;
     }
     if (fadeBackdrop)

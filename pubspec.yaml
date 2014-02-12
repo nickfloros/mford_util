@@ -6,6 +6,7 @@ dependencies:
   google_maps: any
   intl: any
   lawndart: any
+  logging: any
   polymer: any
 transformers:
 - polymer:

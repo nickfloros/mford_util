@@ -4,13 +4,14 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:js' show context, JsObject, JsFunction;
 
+import 'package:logging/logging.dart' show Logger, Level, LogRecord;
 
 /**
  * Google line chart custom element
  */
 @CustomTag('line-chart')
 class LineChart extends PolymerElement {
-  
+  final Logger _log = new Logger('LineChart');
   bool get applyAuthorStyles => true;
 
   /*
@@ -43,7 +44,7 @@ class LineChart extends PolymerElement {
   Completer _loadCompleter;
   
   LineChart.created() : super.created() {
-    print('LineChart.created shadowRoot is null ${shadowRoot==null}');
+    _log.fine('LineChart.created shadowRoot is null ${shadowRoot==null}');
     if (shadowRoot!=null) {
       _load().then((_) {_intChart();});
     }
